@@ -17,8 +17,25 @@ import os
 
 WORD = "Thumbsupper"
 
+# The sealed gate the grader applies to /output/entry.txt: UTF-8 text of
+# 1 to 30 characters, not only white space. Refuse to write anything that
+# would fail it, so a future word change can never silently ship an
+# invalid entry.
+MAX_CHARS = 30
+
+
+def validate(word):
+    if not 1 <= len(word) <= MAX_CHARS:
+        raise SystemExit("word must be 1 to 30 characters, got %d" % len(word))
+    if len(word.split()) != 1:
+        raise SystemExit("word must be a single word with no whitespace")
+    if not word.strip():
+        raise SystemExit("word must not be only white space")
+    word.encode("utf-8")
+
 
 def main():
+    validate(WORD)
     out_dir = "/output"
     os.makedirs(out_dir, exist_ok=True)
     path = os.path.join(out_dir, "entry.txt")
